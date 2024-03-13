@@ -48,71 +48,8 @@ def _resnet_layer(
     x = activation(x)
     return x
 
-def make_resnet_fn(
-        num_classes: int,
-        depth: int,
-        normalization_layer,
-        width: int = 16,
-        use_bias: bool = True,
-        activation=jax.nn.relu,
-):
-    num_res_blocks = (depth - 2) // 6
-    if (depth - 2) % 6 != 0:
-        raise ValueError('depth must be 6n+2 (e.g. 20, 32, 44).')
 
-    def forward(x, is_training):
-        num_filters = width
-        x = _resnet_layer(
-            x, num_filters=num_filters, activation=activation,
-            use_bias=use_bias,
-            normalization_layer=normalization_layer
-        )
 
-        for stack in range(3):
-            for res_block in range(num_res_blocks):
-                strides = 1
-                if stack > 0 and res_block == 0:  # first layer but not first stack
-                    strides = 2  # downsample
-                y = _resnet_layer(
-                    x, num_filters=num_filters, strides=strides,
-                    activation=activation,
-                    use_bias=use_bias, is_training=True,
-                    normalization_layer=normalization_layer)
-                y = _resnet_layer(
-                    y, num_filters=num_filters, use_bias=use_bias,
-                    is_training=True,
-                    normalization_layer=normalization_layer)
-                if stack > 0 and res_block == 0:  # first layer but not first stack
-                    # linear projection residual shortcut connection to match changed dims
-                    x = _resnet_layer(
-                        x, num_filters=num_filters, kernel_size=1,
-                        strides=strides,
-                        use_bias=use_bias, is_training=True,
-                        normalization_layer=normalization_layer)
-                x = activation(x + y)
-            num_filters *= 2
-        x = hk.AvgPool((8, 8, 1), 8, 'VALID')(x)
-        x = hk.Flatten()(x)
-        logits = hk.Linear(num_classes, w_init=he_normal)(x)
-        return logits
-
-    return forward
-
-def make_resnet20_frn_fn(num_classes, activation=jax.nn.relu):
-    return make_resnet_fn(
-        num_classes, depth=20, normalization_layer=FilterResponseNorm,
-        activation=activation)
-
-def make_mlp_fn(output_dim, layer_dims, nonlinearity = jax.nn.elu):
-    biasinit = Constant(0.05)
-    def forward(inp, is_training):
-        out = hk.Flatten()(inp)
-        for layer_dim in layer_dims:
-            out = hk.Linear(layer_dim, b_init=biasinit)(out)
-            out = nonlinearity(out)
-        return hk.Linear(output_dim, b_init=biasinit)(out)
-
-    return forward
 
 def make_resnet_classification(num_classes): 
     def forward(x, is_training):
@@ -121,37 +58,11 @@ def make_resnet_classification(num_classes):
 
     return forward
 
-def make_lenet5_fn(num_classes):
 
-    def lenet_fn(x, is_training):
-
-        cnn = hk.Sequential([
-            hk.Conv2D(output_channels=6, kernel_shape=5, padding="SAME"),
-            jax.nn.relu,
-            hk.MaxPool(window_shape=3, strides=2, padding="VALID"),
-            hk.Conv2D(output_channels=16, kernel_shape=5, padding="SAME"),
-            jax.nn.relu,
-            hk.MaxPool(window_shape=3, strides=2, padding="VALID"),
-            hk.Conv2D(output_channels=120, kernel_shape=5, padding="SAME"),
-            jax.nn.relu,
-            hk.MaxPool(window_shape=3, strides=2, padding="VALID"),
-            hk.Flatten(),
-            hk.Linear(64),
-            jax.nn.relu,
-            hk.Linear(num_classes - 1),
-        ])
-        return cnn(x)
-
-    return lenet_fn
 
 def get_model(model_name, num_classes, **kwargs):
     _MODEL_FNS = {
-        "resnet20": functools.partial(
-            make_resnet20_frn_fn, activation=lambda x: x),
-        "mlp": functools.partial(
-            make_mlp_fn, layer_dims=[500, 300], nonlinearity=jax.nn.elu),
-        "resnet18": make_resnet18_classification,
-        "lenet": make_lenet5_fn,
+        "resnet": make_resnet_classification,
     }
 
     if model_name not in _MODEL_FNS.keys():

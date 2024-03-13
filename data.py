@@ -9,7 +9,6 @@ def dataloader(datasetname : str):
     datasets = { 'celebA': _celebA, 
                  'stanfordcars': _stanfordcars,
                  'mnist': _mnist,
-                'cifar10': _cifar10
                }
 
     return datasets[datasetname.lower()]

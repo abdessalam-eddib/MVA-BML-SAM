@@ -8,7 +8,7 @@ import jax
 import jax.numpy as jnp
 from haiku.initializers import Constant
 import functools
-from resnet18 import ResNet18
+from resnet import ResNet
 
 he_normal = hk.initializers.VarianceScaling(2.0, 'fan_in', 'truncated_normal')
 _DEFAULT_BN_CONFIG = {
@@ -114,9 +114,9 @@ def make_mlp_fn(output_dim, layer_dims, nonlinearity = jax.nn.elu):
 
     return forward
 
-def make_resnet18_classification(num_classes): 
+def make_resnet_classification(num_classes): 
     def forward(x, is_training):
-        net = ResNet18(num_classes = num_classes)
+        net = ResNet(num_classes = num_classes)
         return net(x, is_training = is_training)
 
     return forward

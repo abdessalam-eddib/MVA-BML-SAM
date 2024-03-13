@@ -94,7 +94,7 @@ def main():
                         help='independent perturbations on subbatches?')
     parser.add_argument('--noaugment', dest='augment', action='store_false',
                         help='no data augmentation')
-    parser.add_argument('--model', dest='model', default='resnet18',
+    parser.add_argument('--model', dest='model', default='resnet',
                         help='model architecture')
     parser.add_argument('--datasetfolder', dest='datasetfolder', type=str, 
                         default='datasets')

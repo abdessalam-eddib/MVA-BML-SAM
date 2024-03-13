@@ -18,6 +18,8 @@ from models import get_model
 from util import tprint, nll_categorical
 from optim import build_sgd_optimizer, build_sam_optimizer, build_bsam_optimizer
 
+import time
+
 num_workers = 4
 
 def get_optimizer(args, ndata, modelapply):
@@ -65,7 +67,7 @@ def get_optimizer(args, ndata, modelapply):
 
 def main():
     """ training loop """
-
+    start = time.time()
     # options and hyperparameters
     parser = argparse.ArgumentParser()
     parser.add_argument('--randomseed', dest='randomseed', type=int, default=0)
@@ -220,6 +222,8 @@ def main():
             file.write('\n')
             file.write(f"""[{epoch:3d}/{args.epochs}] Trainloss: {loss:.3f}"""
                        f""" | Acc: {acc:.3f} """)
+    end = time.time()
+    print("Training Time :", end - start)
 
 if __name__ == '__main__':
     main()

@@ -178,7 +178,7 @@ for j in range(0, epochs + 1, 2):
 
 # Save the list of images as a GIF
 output_file = 'animation_make_moons.gif'
-gif_file_path = os.path.join(demo_folder_path, "output_file)
+gif_file_path = os.path.join(demo_folder_path, output_file)
 images[0].save(gif_file_path, save_all=True, append_images=images[1:], duration=50, loop=0)
 
 
@@ -314,7 +314,7 @@ for j in range(0, epochs + 1, 2):
 
 # Save the list of images as a GIF
 output_file = 'animation_make_cirles.gif'
-gif_file_path = os.path.join(demo_folder_path, "output_file)
+gif_file_path = os.path.join(demo_folder_path, output_file)
 images[0].save(gif_file_path, save_all=True, append_images=images[1:], duration=50, loop=0)
 
 
@@ -451,5 +451,5 @@ for j in range(0, epochs + 1, 2):
 
 # Save the list of images as a GIF
 output_file = 'animation_make_blobs.gif'
-gif_file_path = os.path.join(demo_folder_path, "output_file)
+gif_file_path = os.path.join(demo_folder_path, output_file)
 images[0].save(gif_file_path, save_all=True, append_images=images[1:], duration=50, loop=0)

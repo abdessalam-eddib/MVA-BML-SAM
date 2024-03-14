@@ -44,7 +44,7 @@ Execution time: 3592s, Accuracy: 92.96%
 
 We provide visualizations of the training loss and accuracy over the 20 training epochs.
 
-![Training Loss and Accuracy Plot](SGD_SAM_bSAM)
+![Training Loss and Accuracy Plot](loss_acc_compar.png)
 
 ### Pretrained Models
 

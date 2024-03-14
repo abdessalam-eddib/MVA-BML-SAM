@@ -6,63 +6,16 @@ from torchvision import transforms
 def dataloader(datasetname : str):
     """ returns dataloaders for a given dataset """
 
-    datasets = { 'mnist': _mnist, 
-                 'fashion': _fashion, 
-                 'cifar10': _cifar10, 
-                 'cifar100': _cifar100,
-                 'tinyimagenet': _tinyimagenet }
+    datasets = {'cifar10': _cifar10,
+                'food101': _food101,
+                'stanfordcars': _stanfordcars,
+                'fakedata': _fakedata,
+                'caltech101': _caltech101}
 
     return datasets[datasetname.lower()]
 
-def _mnist(
-        batchsize : int, testbatchsize : int, datasetfolder : str, 
-        augment : bool = False, nworkers : int = 8):
-    """ MNIST, 60000 28x28x1 images, 10 classes, 10000 test images """
 
-    transform_totensor = transforms.Compose([
-        transforms.ToTensor(),
-    ])
 
-    trainset = torchvision.datasets.MNIST(
-        root=datasetfolder, train=True, 
-        download=True, transform=transform_totensor)
-    trainloader = torch.utils.data.DataLoader(
-        trainset, batch_size=batchsize, shuffle=True, 
-        num_workers=nworkers)
-
-    testset = torchvision.datasets.MNIST(
-        root=datasetfolder, train=False, 
-        download=True, transform=transform_totensor)
-    testloader = torch.utils.data.DataLoader(
-        testset, batch_size=testbatchsize, shuffle=False, 
-        num_workers=nworkers)
-
-    return trainset, testset, trainloader, testloader
-
-def _fashion(
-        batchsize : int, testbatchsize : int, datasetfolder : str, 
-        augment : bool = False, nworkers : int = 8):
-    """ FashionMNIST, 60000 28x28x1 images, 10 classes, 10000 test images """
-
-    transform_totensor = transforms.Compose([
-        transforms.ToTensor(),
-    ])
-
-    trainset = torchvision.datasets.FashionMNIST(
-        root=datasetfolder, train=True, 
-        download=True, transform=transform_totensor)
-    trainloader = torch.utils.data.DataLoader(
-        trainset, batch_size=batchsize, shuffle=True, 
-        num_workers=nworkers)
-
-    testset = torchvision.datasets.FashionMNIST(
-        root=datasetfolder, train=False, 
-        download=True, transform=transform_totensor)
-    testloader = torch.utils.data.DataLoader(
-        testset, batch_size=testbatchsize, shuffle=False, 
-        num_workers=nworkers)
-
-    return trainset, testset, trainloader, testloader
 
 def _cifar10(
         batchsize : int, testbatchsize : int, datasetfolder : str, 
@@ -107,89 +60,160 @@ def _cifar10(
 
     return trainset, testset, trainloader, testloader
 
-def _cifar100(
-        batchsize : int, testbatchsize : int, datasetfolder : str, 
-        augment : bool = True, nworkers : int = 8):
-    """ CIFAR100, 50000 32x32x3 images, 100 classes, 10000 test images """
+    
+def _food101(
+        batchsize: int, testbatchsize: int, datasetfolder: str,
+        augment: bool = True, nworkers: int = 8):
+    """ Food101, 101 food categories, variable resolution images """
 
-    train_mean = (0.5071, 0.4865, 0.4409)
-    train_std = (0.2673, 0.2564, 0.2761)
+    train_mean = (0.5, 0.5, 0.5)
+    train_std = (0.5, 0.5, 0.5)
 
+    # Define transformations for data augmentation and normalization
     if augment:
         transform_train = transforms.Compose([
-            transforms.RandomCrop(32, padding=4),
+            transforms.RandomResizedCrop(224),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             transforms.Normalize(train_mean, train_std),
         ])
-
     else:
         transform_train = transforms.Compose([
+            transforms.Resize(256),
+            transforms.CenterCrop(224),
             transforms.ToTensor(),
             transforms.Normalize(train_mean, train_std),
         ])
 
     transform_test = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize(train_mean, train_std),
-    ])
-
-    trainset = torchvision.datasets.CIFAR100(
-        root=datasetfolder, train=True, 
-        download=True, transform=transform_train)
-    trainloader = torch.utils.data.DataLoader(
-        trainset, batch_size=batchsize, shuffle=True, 
-        num_workers=nworkers, drop_last=True)
-
-    testset = torchvision.datasets.CIFAR100(
-        root=datasetfolder, train=False, 
-        download=True, transform=transform_test)
-    testloader = torch.utils.data.DataLoader(
-        testset, batch_size=testbatchsize, shuffle=False, 
-        num_workers=nworkers, drop_last=False)
-
-    return trainset, testset, trainloader, testloader
-
-def _tinyimagenet(batchsize : int, testbatchsize : int, datasetfolder : str, 
-                  augment : bool = True, nworkers : int = 8):
-    """ TinyImageNet, 100000 64x64x3 images, 200 classes, 10000 test images """
-
-    train_mean = (0.485, 0.456, 0.406)
-    train_std = (0.229, 0.224, 0.225)
-
-    data_dir = os.path.join(datasetfolder, 'tiny-imagenet-200')
-    train_dir = os.path.join(data_dir, 'train')
-    valid_dir = os.path.join(data_dir, 'val/images')
-
-    if augment:
-        transform_train = transforms.Compose([
-            transforms.RandomCrop(64, padding=4),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            transforms.Normalize(train_mean, train_std),
-        ])
-
-    else:
-        transform_train = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize(train_mean, train_std),
-        ])
-
-    transform_test = transforms.Compose([
+        transforms.Resize(256),
+        transforms.CenterCrop(224),
         transforms.ToTensor(),
         transforms.Normalize(train_mean, train_std),
     ])
 
     trainset = torchvision.datasets.ImageFolder(
-        train_dir, transform=transform_train)
+        os.path.join(datasetfolder, 'food-101', 'train'), transform=transform_train)
     trainloader = torch.utils.data.DataLoader(
-        trainset, batch_size=batchsize, 
+        trainset, batch_size=batchsize,
         shuffle=True, num_workers=nworkers, drop_last=True)
 
     testset = torchvision.datasets.ImageFolder(
-        valid_dir, transform=transform_test)
+        os.path.join(datasetfolder, 'food-101', 'test'), transform=transform_test)
     testloader = torch.utils.data.DataLoader(
-        testset, batch_size=testbatchsize, 
+        testset, batch_size=testbatchsize,
+        shuffle=False, num_workers=nworkers, drop_last=False)
+
+    return trainset, testset, trainloader, testloader
+
+
+def _stanfordcars(
+        batchsize: int, testbatchsize: int, datasetfolder: str,
+        augment: bool = True, nworkers: int = 8):
+    """ Stanford Cars, 196 makes, 8144 models, 16,185 images """
+
+    train_mean = (0.5, 0.5, 0.5)
+    train_std = (0.5, 0.5, 0.5)
+
+    if augment:
+        transform_train = transforms.Compose([
+            transforms.RandomResizedCrop(224),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            transforms.Normalize(train_mean, train_std),
+        ])
+    else:
+        transform_train = transforms.Compose([
+            transforms.Resize(256),
+            transforms.CenterCrop(224),
+            transforms.ToTensor(),
+            transforms.Normalize(train_mean, train_std),
+        ])
+
+    transform_test = transforms.Compose([
+        transforms.Resize(256),
+        transforms.CenterCrop(224),
+        transforms.ToTensor(),
+        transforms.Normalize(train_mean, train_std),
+    ])
+
+    trainset = torchvision.datasets.ImageFolder(
+        os.path.join(datasetfolder, 'stanford-cars', 'train'), transform=transform_train)
+    trainloader = torch.utils.data.DataLoader(
+        trainset, batch_size=batchsize,
+        shuffle=True, num_workers=nworkers, drop_last=True)
+
+    testset = torchvision.datasets.ImageFolder(
+        os.path.join(datasetfolder, 'stanford-cars', 'test'), transform=transform_test)
+    testloader = torch.utils.data.DataLoader(
+        testset, batch_size=testbatchsize,
+        shuffle=False, num_workers=nworkers, drop_last=False)
+
+    return trainset, testset, trainloader, testloader
+
+
+def _fakedata(
+        batchsize: int, testbatchsize: int, datasetfolder: str,
+        augment: bool = True, nworkers: int = 8):
+    """ FakeData, randomly generated data for debugging """
+
+    trainset = torchvision.datasets.FakeData(
+        size=50000, image_size=(3, 224, 224), num_classes=10,
+        transform=transforms.ToTensor())
+    trainloader = torch.utils.data.DataLoader(
+        trainset, batch_size=batchsize,
+        shuffle=True, num_workers=nworkers, drop_last=True)
+
+    testset = torchvision.datasets.FakeData(
+        size=10000, image_size=(3, 224, 224), num_classes=10,
+        transform=transforms.ToTensor())
+    testloader = torch.utils.data.DataLoader(
+        testset, batch_size=testbatchsize,
+        shuffle=False, num_workers=nworkers, drop_last=False)
+
+    return trainset, testset, trainloader, testloader
+
+
+def _caltech101(
+        batchsize: int, testbatchsize: int, datasetfolder: str,
+        augment: bool = True, nworkers: int = 8):
+    """ Caltech101, 101 object categories, 9144 images """
+
+    train_mean = (0.5, 0.5, 0.5)
+    train_std = (0.5, 0.5, 0.5)
+
+    if augment:
+        transform_train = transforms.Compose([
+            transforms.RandomResizedCrop(224),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            transforms.Normalize(train_mean, train_std),
+        ])
+    else:
+        transform_train = transforms.Compose([
+            transforms.Resize(256),
+            transforms.CenterCrop(224),
+            transforms.ToTensor(),
+            transforms.Normalize(train_mean, train_std),
+        ])
+
+    transform_test = transforms.Compose([
+        transforms.Resize(256),
+        transforms.CenterCrop(224),
+        transforms.ToTensor(),
+        transforms.Normalize(train_mean, train_std),
+    ])
+
+    trainset = torchvision.datasets.ImageFolder(
+        os.path.join(datasetfolder, 'caltech-101', 'train'), transform=transform_train)
+    trainloader = torch.utils.data.DataLoader(
+        trainset, batch_size=batchsize,
+        shuffle=True, num_workers=nworkers, drop_last=True)
+
+    testset = torchvision.datasets.ImageFolder(
+        os.path.join(datasetfolder, 'caltech-101', 'test'), transform=transform_test)
+    testloader = torch.utils.data.DataLoader(
+        testset, batch_size=testbatchsize,
         shuffle=False, num_workers=nworkers, drop_last=False)
 
     return trainset, testset, trainloader, testloader

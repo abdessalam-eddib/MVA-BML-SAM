@@ -191,11 +191,11 @@ images[0].save(gif_file_path, save_all=True, append_images=images[1:], duration=
 
 
 
-# make_cirles dataset 
+# make_circles dataset 
 print("Classification with bSAM on make_circles")
 N = 100
 np.random.seed(1)
-X, y = make_cirles(N, noise=0.1)
+X, y = make_circles(N, noise=0.1)
 X_train = jnp.array(X, dtype=float)
 y_train = jnp.array(y, dtype=float)
 
@@ -306,7 +306,7 @@ for j in range(0, epochs + 1, 2):
     ax.scatter(X[y==0,0], X[y==0, 1], c=colorlist[-1], marker='o', edgecolors=colorlist[-1], s=60, linewidth=2)
     ax.scatter(X[y==1,0], X[y==1, 1], c=colorlist[0], marker='X', edgecolors=colorlist[0], s=80, linewidth=2)
     ax.set_axis_off()
-    filename = 'frame_make_cirles.png'
+    filename = 'frame_make_circles.png'
     image_file_path = os.path.join(demo_folder_path, filename)
     plt.savefig(image_file_path, bbox_inches='tight')
 
@@ -316,7 +316,7 @@ for j in range(0, epochs + 1, 2):
     images.append(image)
 
 # Save the list of images as a GIF
-output_file = 'animation_make_cirles.gif'
+output_file = 'animation_make_circles.gif'
 gif_file_path = os.path.join(demo_folder_path, output_file)
 images[0].save(gif_file_path, save_all=True, append_images=images[1:], duration=50, loop=0)
 

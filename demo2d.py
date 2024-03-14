@@ -10,7 +10,7 @@ from models import get_model
 import optim
 import numpy as np
 from sklearn.datasets import make_moons
-from jax.config import config
+from jax import config
 from PIL import Image
 
 config.update("jax_enable_x64", True)

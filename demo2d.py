@@ -176,7 +176,7 @@ for j in range(0, epochs + 1, 2):
 
     plt.close()
 
-    image = Image.open(filename).convert("RGB")
+    image = Image.open(image_file_path).convert("RGB")
     images.append(image)
 
 # Save the list of images as a GIF
@@ -312,7 +312,7 @@ for j in range(0, epochs + 1, 2):
 
     plt.close()
 
-    image = Image.open(filename).convert("RGB")
+    image = Image.open(image_file_path).convert("RGB")
     images.append(image)
 
 # Save the list of images as a GIF
@@ -449,7 +449,7 @@ for j in range(0, epochs + 1, 2):
 
     plt.close()
 
-    image = Image.open(filename).convert("RGB")
+    image = Image.open(image_file_path).convert("RGB")
     images.append(image)
 
 # Save the list of images as a GIF

@@ -10,7 +10,7 @@ def dataloader(datasetname : str):
                 'food101': _food101,
                 'stanfordcars': _stanfordcars,
                 'fakedata': _fakedata,
-                'caltech101': _caltech101}
+               }
 
     return datasets[datasetname.lower()]
 
@@ -139,14 +139,16 @@ def _stanfordcars(
         transforms.Normalize(train_mean, train_std),
     ])
 
-    trainset = torchvision.datasets.ImageFolder(
-        os.path.join(datasetfolder, 'stanford-cars', 'train'), transform=transform_train)
+    trainset = torchvision.datasets.StanfordCars(
+        root=datasetfolder, 
+        download=True, transform=transform_train)
     trainloader = torch.utils.data.DataLoader(
         trainset, batch_size=batchsize,
         shuffle=True, num_workers=nworkers, drop_last=True)
 
-    testset = torchvision.datasets.ImageFolder(
-        os.path.join(datasetfolder, 'stanford-cars', 'test'), transform=transform_test)
+    testset = torchvision.datasets.StanfordCars(
+        root=datasetfolder, split="test", 
+        download=True, transform=transform_test)
     testloader = torch.utils.data.DataLoader(
         testset, batch_size=testbatchsize,
         shuffle=False, num_workers=nworkers, drop_last=False)

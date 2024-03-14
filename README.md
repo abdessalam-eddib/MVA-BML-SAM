@@ -44,25 +44,27 @@ Execution time: 3592s, Accuracy: 92.96%
 
 We provide visualizations of the training loss and accuracy over the 20 training epochs.
 
-![Training Loss and Accuracy Plot](path/to/image)
+![Training Loss and Accuracy Plot](SGD_SAM_bSAM)
 
 ### Pretrained Models
 
-Due to GitHub limitations, our pretrained models are stored on Google Drive. You can access them from the following link: [link to Google Drive].
+Due to GitHub limitations, our pretrained models are stored on Google Drive. You can access them from the following link: [https://drive.google.com/drive/folders/1VRd5PDNSFGOzJGR2qkSkGjOuprUrS959?usp=drive_link].
 
 ### Dependencies
 
-- Python 3.x
-- PyTorch
-- NumPy
-- Matplotlib
-- Other dependencies as listed in `requirements.txt`
+To avoid any problems while reproducing the results from this GitHub repository using Google Colab, please install the following dependencies:
 
-### References
+- Install Haiku using the following command:
+```bash
+pip install -U dm-haiku
+```
 
-- SAM: Sharpness-Aware Minimization: [link to the paper]
+- Install JAX via the following command:
+```bash
+pip install -U "jax[cuda12_pip]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+```
 
-For any questions or issues, feel free to contact [maintainer's email].
+Ensure you have the necessary permissions and environment configurations in requirements file.
  
 
 

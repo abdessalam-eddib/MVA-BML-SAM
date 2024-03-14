@@ -12,6 +12,8 @@ import numpy as np
 from sklearn.datasets import make_moons, make_circles, make_blobs
 from jax import config
 from PIL import Image
+import os
+
 
 config.update("jax_enable_x64", True)
 colorlist = [ '#8F5F3F', '#FFFFFF', '#435571' ]

@@ -2,7 +2,7 @@
 
 ## Bayesian Machine Learning Project
 
-This repository contains the code implementation for the Bayesian Machine Learning project based on the paper "SAM as an Optimal Relaxation of Bayes" [link to the paper]. 
+This repository contains the code implementation for the Bayesian Machine Learning project based on the paper "SAM as an Optimal Relaxation of Bayes" [https://arxiv.org/pdf/2210.01620.pdf]. Our code is adapted from [https://github.com/team-approx-bayes/bayesian-sam.git]
 
 ### Overview
 

@@ -331,7 +331,7 @@ images[0].save(gif_file_path, save_all=True, append_images=images[1:], duration=
 print("Classification with bSAM on make_blobs")
 N = 100
 np.random.seed(1)
-X, y = make_blobs(N, noise=0.1)
+X, y = make_blobs(N)
 X_train = jnp.array(X, dtype=float)
 y_train = jnp.array(y, dtype=float)
 

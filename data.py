@@ -92,14 +92,16 @@ def _food101(
         transforms.Normalize(train_mean, train_std),
     ])
 
-    trainset = torchvision.datasets.ImageFolder(
-        os.path.join(datasetfolder, 'food-101', 'train'), transform=transform_train)
+    trainset = torchvision.datasets.Food101(
+        root=datasetfolder, train=True, 
+        download=True, transform=transform_train)
     trainloader = torch.utils.data.DataLoader(
         trainset, batch_size=batchsize,
         shuffle=True, num_workers=nworkers, drop_last=True)
 
-    testset = torchvision.datasets.ImageFolder(
-        os.path.join(datasetfolder, 'food-101', 'test'), transform=transform_test)
+    testset = torchvision.datasets.Food101(
+        root=datasetfolder, train=False, 
+        download=True, transform=transform_test)
     testloader = torch.utils.data.DataLoader(
         testset, batch_size=testbatchsize,
         shuffle=False, num_workers=nworkers, drop_last=False)

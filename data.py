@@ -93,7 +93,7 @@ def _food101(
     ])
 
     trainset = torchvision.datasets.Food101(
-        root=datasetfolder, split="train", 
+        root=datasetfolder, 
         download=True, transform=transform_train)
     trainloader = torch.utils.data.DataLoader(
         trainset, batch_size=batchsize,

@@ -1,0 +1,8 @@
+batchsize = 30
+learningrate = 0.5
+beta1 = 0.9
+beta2 = 0.999
+rho = 0.05
+damping = 0.1
+epochs = 250
+wdecay = 0.0001

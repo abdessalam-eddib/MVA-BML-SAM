@@ -139,14 +139,14 @@ def _stanfordcars(
         transforms.Normalize(train_mean, train_std),
     ])
 
-    trainset = torchvision.datasets.StanfordCars(
+    trainset = torchvision.datasets.STL10(
         root=datasetfolder, 
         download=True, transform=transform_train)
     trainloader = torch.utils.data.DataLoader(
         trainset, batch_size=batchsize,
         shuffle=True, num_workers=nworkers, drop_last=True)
 
-    testset = torchvision.datasets.StanfordCars(
+    testset = torchvision.datasets.STL10(
         root=datasetfolder, split="test", 
         download=True, transform=transform_test)
     testloader = torch.utils.data.DataLoader(
